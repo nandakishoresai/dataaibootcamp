@@ -1,0 +1,144 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "ADFName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Azure DataFactory Name."
+      }
+    },
+    "ADFLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "Location of the Azure DataFactory."
+      }
+    },
+    "VirtualNetworkName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Name of the Virtual Network."
+      }
+    },
+    "SubnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Name of the Subnet."
+      }
+    },
+    "SSISIRLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "Location of the Azure SSIS Integration Runtime Compute Resource."
+      }
+    },
+    "NodeSize": {
+      "type": "string",
+      "allowedValues": [
+        "Standard_A4_v2",
+        "Standard_A8_v2",
+        "Standard_D1_v2",
+        "Standard_D2_v2",
+        "Standard_D3_v2",
+        "Standard_D4_v2"
+      ],
+      "metadata": {
+        "description": "The Node Size of the Azure SSIS Integration Runtime Compute Resource."
+      }
+    },
+    "NodeNumber": {
+      "type": "int",
+      "metadata": {
+        "description": "Number of nodes in the cluster."
+      }
+    },
+    "MaxParallelExecutionsPerNode": {
+      "type": "int",
+      "metadata": {
+        "description": "The Maximum number of parallel executions per node in the cluster."
+      }
+    },
+    "CatalogSqlServerName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Azure SQL server that hosts the SSISDB database (SSIS Catalog). Example: servername.database.windows.net"
+      }
+    },
+    "CatalogDBAdminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Azure SQL database user."
+      }
+    },
+    "CatalogDBAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Password for the Azure SQL database user."
+      }
+    },
+    "CatalogPricingTier": {
+      "type": "string",
+      "allowedValues": [
+        "Basic",
+        "S0",
+        "S1",
+        "S2"
+      ],
+      "metadata": {
+        "description": "Pricing tier of the SSIS Catalog (SSISDB datbase)"
+      }
+    }
+  },
+  "variables": {
+
+  },
+  "resources": [
+    {
+      "name": "[parameters('ADFName')]",
+      "apiVersion": "2018-06-01",
+      "type": "Microsoft.DataFactory/factories",
+      "location": "[parameters('ADFLocation')]",  
+      "properties": {},
+      "resources": [
+        {
+          "name": "[concat(parameters('ADFName'), '/tsssisruntime')]",
+          "type": "Microsoft.DataFactory/factories/integrationRuntimes",
+          "dependsOn": [
+            "[parameters('ADFName')]"
+          ],
+          "apiVersion": "2018-06-01",
+          "properties": {
+            "type": "Managed",
+            "typeProperties": {
+              "computeProperties": {
+                "location": "[parameters('SSISIRLocation')]",
+                "nodeSize": "[parameters('NodeSize')]",
+                "numberOfNodes": "[parameters('NodeNumber')]",
+                "maxParallelExecutionsPerNode": "[parameters('MaxParallelExecutionsPerNode')]",
+                "vNetProperties": {
+                  "vNetId": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourcegroup().name, '/providers/Microsoft.Network/virtualNetworks/', parameters('VirtualNetworkName'))]",
+                  "subnet": "[parameters('SubnetName')]"
+                }
+              },
+              "ssisProperties": {
+                "catalogInfo": {
+                  "catalogServerEndpoint": "[parameters('CatalogSqlServerName')]",
+                  "catalogAdminUserName": "[parameters('CatalogDBAdminUsername')]",
+                  "catalogAdminPassword": {
+                    "type": "SecureString",
+                    "value": "[parameters('CatalogDBAdminPassword')]"
+                  },
+                  "catalogPricingTier": "[parameters('CatalogPricingTier')]"
+                },
+                "edition": "Standard",
+                "licenseType": "LicenseIncluded"
+              }
+            }
+          }
+        }
+      ]
+    }  
+  ],
+  "outputs": {
+  }
+}

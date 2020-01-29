@@ -1,0 +1,79 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "SQLServerName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Name for the SQL Server Instance."
+      }
+    },
+    "SQLDatabaseName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Name for the SQL Server Database."
+      }
+    },
+    "SQLDatabaseLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "The Location for the SQL Server Database."
+      }
+    },
+    "SQLDatabaseSKUName": {
+      "type": "string",
+      "metadata": {
+        "description": "The SKU Name for the SQL Server Database (e.g., Basic/Standard/Premium)."
+      }
+    },
+    "SQLDatabaseSKUTier": {
+      "type": "string",
+      "metadata": {
+        "description": "The SKU Tier for the SQL Server Database (e.g., S1/S2/S3)."
+      }
+    },
+    "MaxSizeBytes": {
+      "type": "int",
+      "metadata": {
+        "description": "The Max Size Bytes for the SQL Server Database (e.g., S1/S2/S3)."
+      }
+    }
+  },
+  "variables": {
+    "sqldbNameConcat": "[concat(parameters('SQLServerName'), '/', parameters('SQLDatabaseName'))]"  
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Sql/servers/databases",
+      "apiVersion": "2017-10-01-preview",
+      "name": "[variables('sqldbNameConcat')]",
+      "location": "[parameters('SQLDatabaseLocation')]",
+      "sku": {
+        "name": "[parameters('SQLDatabaseSKUName')]",
+        "tier": "[parameters('SQLDatabaseSKUTier')]"
+      },
+      "kind": "v12.0,user",
+      "properties": {
+        "collation": "SQL_Latin1_General_CP1_CI_AS",
+        "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
+        "maxSizeBytes": "[parameters('maxSizeBytes')]",
+        "zoneRedundant": false
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/databases/transparentDataEncryption",
+      "apiVersion": "2014-04-01",
+      "name": "[concat(variables('sqldbNameConcat'), '/current')]",
+      "location": "[parameters('SQLDatabaseLocation')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers/databases', parameters('SQLServerName'), parameters('SQLDatabaseName'))]"
+      ],
+      "properties": {
+        "status": "Enabled"
+      }
+    }   
+
+  ],
+  "outputs": {
+  }
+}

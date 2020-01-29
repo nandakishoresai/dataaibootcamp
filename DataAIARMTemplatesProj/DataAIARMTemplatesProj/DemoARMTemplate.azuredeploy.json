@@ -1,0 +1,140 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "SQLServerName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the SQL Server Instance."
+      }
+    },
+    "VirtualNetworkName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Name of the Virtual Network."
+      }
+    },
+    "SQLServerAdminLoginName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Name of the SQL Server Admin Login."
+      }
+    },
+    "SQLServerAdminLoginPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The Password for the SQL Server Admin Login."
+      }
+    },
+    "SQLServerLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "The Location for the SQL Server."
+      }
+    },
+    "KeyVaultName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the Key Vault Instance."
+      }
+    },
+    "ADTenantId": {
+      "type": "string",
+      "metadata": {
+        "description": "The TenantId of the Active Directory associated with the SQL Server."
+      }
+    },     
+    "HSMKeyName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Name of the HSM Key Vault Key storing the HSM Key to be associated with the SQL Server."
+      }
+    },
+    "HSMKeyId": {
+      "type": "string",
+      "metadata": {
+        "description": "The Id  HSM Key Vault Key storing the HSM Key to be associated with the SQL Server."
+      }
+    },
+    "GithubURI": {
+      "type": "string",
+      "metadata": {
+        "description": "The Url of the Github Repository."
+      }
+    }
+  },
+  "variables": {
+    "CreateSQLServerURI": "[concat(parameters('GithubURI'), '/CreateSQLServer.json')]",
+    "CreateAccesstoSQLOnKeyVault": "[concat(parameters('GithubURI'), '/CreateAccesstoSQLOnKeyVault.json')]",
+    "EnableTDEOnSQLServer": "[concat(parameters('GithubURI'), '/EnableTDEOnSQLServer.json')]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2017-05-10",
+      "name": "SQLServerDeployment",
+      "resourceGroup": "[resourceGroup().name]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('CreateSQLServerURI')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "SQLServerName": { "value": "[parameters('SQLServerName')]" },
+          "VirtualNetworkName": { "value": "[parameters('VirtualNetworkName')]" },
+          "SQLServerAdminLoginName": { "value": "[parameters('SQLServerAdminLoginName')]" },
+          "SQLServerAdminLoginPassword": { "value": "[parameters('SQLServerAdminLoginPassword')]" }
+
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2017-05-10",
+      "name": "EnableAccessToSQLServerOnKeyVault",
+      "resourceGroup": "[resourceGroup().name]",
+      "dependsOn": [
+        "EngineeringLayerSQLServer"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('CreateAccesstoSQLOnKeyVault')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "SQLServerRGName": { "value": "[resourceGroup().name]" },
+          "SQLServerName": { "value": "[parameters('SQLServerName')]" },
+          "ADTenantId": { "value": "[parameters('ADTenantId')]" },
+          "AzureKeyVaultName": { "value": "[parameters('KeyVaultName')]" }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2017-05-10",
+      "name": "EnableTDEOnSQLServer",
+      "resourceGroup": "[resourceGroup().name]",
+      "dependsOn": [
+        "EngineeringLayerSQLServer",
+        "EnableTDEForEngineeringLayerSQLServer"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('EnableTDEOnSQLServer')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "SQLServerName": { "value": "[parameters('SQLServerName')]" },
+          "ADTenantId": { "value": "[parameters('ADTenantId')]" },
+          "AzureKeyVaultName": { "value": "[parameters('KeyVaultName')]" },
+          "AzureKeyVaultKeyName": { "value": "[parameters('HSMKeyName')]" },
+          "AzureKeyVaultKeyId": { "value": "[parameters('HSMKeyId')]" }
+        }
+      }
+    }
+  ],
+  "outputs": {}
+}

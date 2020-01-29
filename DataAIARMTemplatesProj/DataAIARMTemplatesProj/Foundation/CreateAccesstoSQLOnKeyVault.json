@@ -1,0 +1,66 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "SQLServerRGName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Resource Group Name for the SQL Server."
+      }
+    },
+    "SQLServerName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Name for the SQL Server."
+      }
+    },
+    "ADTenantId": {
+      "type": "string",
+      "metadata": {
+        "description": "The TenantId of the Active Directory associated with the SQL Server."
+      }
+    },
+    "AzureKeyVaultName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Name of the Azure Key Vault containing the HSM Key for TDE."
+      }
+    },
+    "keysPermissions": {
+      "type": "array",
+      "defaultValue": [
+        "Get",
+        "List",
+        "Decrypt",
+        "Encrypt",
+        "UnwrapKey",
+        "WrapKey"
+      ],
+      "metadata": {
+        "description": "Specifies the permissions to secrets in the vault. Valid values are: all, get, list, set, delete, backup, restore, recover, and purge."
+      }
+    }
+  },
+  "variables": {
+  },
+  "resources": [
+    {
+      "type": "Microsoft.KeyVault/vaults/accessPolicies",
+      "name": "[concat(parameters('AzureKeyVaultName'), '/add')]",
+      "apiVersion": "2018-02-14",
+      "properties": {
+        "accessPolicies": [
+          {
+            "tenantId": "[parameters('ADTenantId')]",
+            "objectId": "[reference(concat(resourceId(parameters('SQLServerRGName'),'Microsoft.Sql/servers', parameters('SQLServerName')),'/providers/Microsoft.ManagedIdentity/Identities/default'), '2015-08-31-PREVIEW').principalId]",
+            "permissions": {
+              "keys": "[parameters('keysPermissions')]"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "outputs": {
+  }
+}

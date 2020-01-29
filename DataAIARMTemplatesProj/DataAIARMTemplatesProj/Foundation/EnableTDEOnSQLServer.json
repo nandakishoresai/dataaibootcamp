@@ -1,0 +1,87 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "SQLServerName": {
+      "type": "string",
+      "defaultValue": "0003-dv-mkt-tmpsqlsrv",
+      "metadata": {
+        "description": "The SQL Server Name to enable the TDE for."
+      }
+    },
+    "ADTenantId": {
+      "type": "string",
+      "defaultValue": "cf36141c-ddd7-45a7-b073-111f66d0b30c",
+      "metadata": {
+        "description": "The TenantId of the Active Directory associated with the SQL Server."
+      }
+    },
+    "AzureKeyVaultName": {
+      "type": "string",
+      "defaultValue": "testkeyvaulthsm01",
+      "metadata": {
+        "description": "The Name of the Azure Key Vault containing the HSM Key for TDE."
+      }
+    },
+    "AzureKeyVaultKeyName": {
+      "type": "string",
+      "defaultValue": "tsthsmKey",
+      "metadata": {
+        "description": "The Name of the HSM Key in the Azure Key Vault used for TDE."
+      }
+    },
+    "AzureKeyVaultKeyId": {
+      "type": "string",
+      "defaultValue": "ee1c47c016474b1cbed5bbf06765e4b3",
+      "metadata": {
+        "description": "The Object Id of the HSM Key in the Azure Key Vault used for TDE."
+      }
+    },
+    "keysPermissions": {
+      "type": "array",
+      "defaultValue": [
+        "Get",
+        "List",
+        "Decrypt",
+        "Encrypt",
+        "UnwrapKey",
+        "WrapKey"
+      ],
+      "metadata": {
+        "description": "Specifies the permissions to secrets in the vault. Valid values are: all, get, list, set, delete, backup, restore, recover, and purge."
+      }
+    }
+  },
+  "variables": {
+    "azurekeyvaultkeyIdConcat": "[concat(parameters('AzureKeyVaultName'),'_', parameters('AzureKeyVaultKeyName'), '_',  parameters('AzureKeyVaultKeyId'))]",
+    "azurekeyvaultkeyUri": "[concat('https://', parameters('AzureKeyVaultName'), '.vault.azure.net/keys/', parameters('AzureKeyVaultKeyName'), '/', parameters('AzureKeyVaultKeyId'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Sql/servers/keys",
+      "apiVersion": "2015-05-01-preview",
+      "name": "[concat(parameters('SQLServerName'), '/', variables('azurekeyvaultkeyIdConcat'))]",
+      "location": "West Europe",
+      "kind": "azurekeyvault",
+      "properties": {
+        "serverKeyType": "AzureKeyVault",
+        "uri": "[variables('azurekeyvaultkeyUri')]"
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/encryptionProtector",
+      "apiVersion": "2015-05-01-preview",
+      "name": "[concat(parameters('SQLServerName'), '/current')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers/keys', parameters('SQLServerName'), variables('azurekeyvaultkeyIdConcat'))]"
+      ],
+      "kind": "azurekeyvault",
+      "properties": {
+        "serverKeyName": "[variables('azurekeyvaultkeyIdConcat')]",
+        "serverKeyType": "AzureKeyVault"
+      }
+    }
+  ],
+  "outputs": {
+  }
+}
