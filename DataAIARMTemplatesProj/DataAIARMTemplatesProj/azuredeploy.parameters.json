@@ -16,19 +16,7 @@
     },
     "SQLServerAdminLoginName": {
       "value": "sauser"
-    },
-    "KeyVaultName": {
-      "value": "demohsmkv"
-    },
-    "HSMKeyName": {
-      "value": "demohsmkey"
-    },
-    "HSMKeyId": {
-      "value": "abfd1df2281747898815469369d425b3"
-    },
-    "ADTenantId": {
-      "value": "cf36141c-ddd7-45a7-b073-111f66d0b30c"
-    },
+    },    
     "GithubURI": {
       "value": "https://raw.githubusercontent.com/nandakishoresai/dataaibootcamp/master"
     },
