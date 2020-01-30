@@ -57,7 +57,7 @@
       "type": "Microsoft.Sql/servers/keys",
       "apiVersion": "2015-05-01-preview",
       "name": "[concat(parameters('SQLServerName'), '/', variables('azurekeyvaultkeyIdConcat'))]",
-      "location": "West Europe",
+      "location": "[resourceGroup().location]",
       "kind": "azurekeyvault",
       "properties": {
         "serverKeyType": "AzureKeyVault",

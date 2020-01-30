@@ -121,7 +121,7 @@
           "CreateSQLServerURI": { "value": "[variables('createSQLServerURI')]" },
           "CreateAccesstoSQLonKeyVaultURI": { "value": "[variables('createaccesstoSQLonKeyVault')]" },
           "EnableTDEonSQLServerURI": { "value": "[variables('enableTDEonSQLServer')]" }
-        }
+        }  
       }
     }  
   ],
