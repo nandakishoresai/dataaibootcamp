@@ -31,8 +31,10 @@
     <Content Include="Deploy-AzureResourceGroup.ps1" />
     <None Include="Foundation\CreateAccesstoSQLOnKeyVault.json" />
     <None Include="Foundation\CreateAzureDataFactory.json" />
+    <None Include="Foundation\CreateKeyVault.json" />
     <None Include="Foundation\CreateSQLDB.json" />
     <None Include="Foundation\CreateSQLServer.json" />
+    <None Include="Foundation\CreateVirtualNetwork.json" />
     <None Include="Foundation\EnableTDEOnSQLServer.json" />
   </ItemGroup>
   <Target Name="GetReferenceAssemblyPaths" />

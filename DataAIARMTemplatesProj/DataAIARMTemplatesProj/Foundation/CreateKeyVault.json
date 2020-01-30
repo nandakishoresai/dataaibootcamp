@@ -1,0 +1,115 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "KeyVaultName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Name of the Azure Key Vault being created."
+      }
+    },   
+    "KeyVaultSKU": {
+      "type": "string",
+      "defaultValue": "Standard",
+      "allowedValues": [
+        "Standard",
+        "standard",
+        "Premium",
+        "premium"
+      ],
+      "metadata": {
+        "description": "SKU for the vault"
+      }
+    },
+    "ADTenantId": {
+      "type": "string",      
+      "metadata": {
+        "description": "The TenantId of the Active Directory associated with the SQL Server."
+      }
+    },
+    "AdminObjectId": {
+      "type": "string",
+      "metadata": {
+        "description": "The ObjectId for the Active Directory Admin Id."
+      }
+    }
+  },
+  "variables": {
+  },
+  "resources": [
+    {
+      "apiVersion": "2016-10-01",
+      "name": "[parameters('KeyVaultName')]",
+      "location": "[resourcegroup().name]",
+      "type": "Microsoft.KeyVault/vaults",
+      "properties": {
+        "enabledForDeployment": true,
+        "enabledForTemplateDeployment": true,
+        "enabledForDiskEncryption": false,
+        "enableSoftDelete": true,
+        "accessPolicies": [
+          {
+            "tenantId": "[parameters('ADTenantId')]",
+            "objectId": "[parameters('AdminObjectId')]",
+            "permissions": {
+              "keys": [
+                "Get",
+                "List",
+                "Update",
+                "Create",
+                "Import",
+                "Delete",
+                "Recover",
+                "Backup",
+                "Restore",
+                "Decrypt",
+                "Encrypt",
+                "UnwrapKey",
+                "WrapKey",
+                "Verify",
+                "Sign",
+                "Purge"
+              ],
+              "secrets": [
+                "Get",
+                "List",
+                "Set",
+                "Delete",
+                "Recover",
+                "Backup",
+                "Restore",
+                "Purge"
+              ],
+              "certificates": [
+                "Get",
+                "List",
+                "Update",
+                "Create",
+                "Import",
+                "Delete",
+                "Recover",
+                "Backup",
+                "Restore",
+                "ManageContacts",
+                "ManageIssuers",
+                "GetIssuers",
+                "ListIssuers",
+                "SetIssuers",
+                "DeleteIssuers",
+                "Purge"
+              ]
+            }
+          }
+        ],
+        "tenantId": "[parameters('ADTenantId')]",
+        "sku": {
+          "name": "[parameters('KeyVaultSKU')]",
+          "family": "A"
+        }
+      },
+      "tags": {}
+    }
+  ],
+  "outputs": {
+  }
+}

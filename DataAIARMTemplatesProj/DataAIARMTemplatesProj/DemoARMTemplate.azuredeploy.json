@@ -2,16 +2,28 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "SQLServerName": {
-      "type": "string",
-      "metadata": {
-        "description": "The name of the SQL Server Instance."
-      }
-    },
     "VirtualNetworkName": {
       "type": "string",
       "metadata": {
         "description": "The Name of the Virtual Network."
+      }
+    },
+    "VirtualNetworkAddressPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "The IP Address Range for the Virtual Network."
+      }
+    },
+    "SubnetAddressPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "The IP Address Range for the Base Subnet."
+      }
+    },
+    "SQLServerName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the SQL Server Instance."
       }
     },
     "SQLServerAdminLoginName": {
@@ -38,12 +50,6 @@
         "description": "The name of the Key Vault Instance."
       }
     },
-    "ADTenantId": {
-      "type": "string",
-      "metadata": {
-        "description": "The TenantId of the Active Directory associated with the SQL Server."
-      }
-    },     
     "HSMKeyName": {
       "type": "string",
       "metadata": {
@@ -56,6 +62,12 @@
         "description": "The Id  HSM Key Vault Key storing the HSM Key to be associated with the SQL Server."
       }
     },
+    "ADTenantId": {
+      "type": "string",
+      "metadata": {
+        "description": "The TenantId of the Active Directory associated with the SQL Server."
+      }
+    },  
     "GithubURI": {
       "type": "string",
       "metadata": {
@@ -64,20 +76,43 @@
     }
   },
   "variables": {
-    "CreateSQLServerURI": "[concat(parameters('GithubURI'), '/CreateSQLServer.json')]",
-    "CreateAccesstoSQLOnKeyVault": "[concat(parameters('GithubURI'), '/CreateAccesstoSQLOnKeyVault.json')]",
-    "EnableTDEOnSQLServer": "[concat(parameters('GithubURI'), '/EnableTDEOnSQLServer.json')]"
+    "createvirtualnetworkURI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateSQLServer.json')]",
+    "createSQLServerURI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateSQLServer.json')]",
+    "createaccesstoSQLonKeyVault": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateAccesstoSQLOnKeyVault.json')]",
+    "enableTDEonSQLServer": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/EnableTDEOnSQLServer.json')]"
   },
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
-      "name": "SQLServerDeployment",
-      "resourceGroup": "[resourceGroup().name]",
+      "name": "VirtualNetworkDeployment",
+      "resourceGroup": "[resourceGroup().name]",     
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('CreateSQLServerURI')]",
+          "uri": "[variables('createvirtualnetworkURI')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "VirtualNetworkName": { "value": "transpire" },
+          "VirtualNetworkLocation": { "value": "[resourcegroup().location]" },
+          "VirtualNetworkAddressPrefix": { "value": "[parameters('VirtualNetworkAddressPrefix')]" },
+          "SubnetAddressPrefix": { "value": "[parameters('SubnetAddressPrefix')]" }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2017-05-10",
+      "name": "SQLServerDeployment",
+      "resourceGroup": "[resourceGroup().name]",
+      "dependsOn": [
+        "VirtualNetworkDeployment"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('createSQLServerURI')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -95,7 +130,7 @@
       "name": "EnableAccessToSQLServerOnKeyVault",
       "resourceGroup": "[resourceGroup().name]",
       "dependsOn": [
-        "EngineeringLayerSQLServer"
+        "SQLServerDeployment"
       ],
       "properties": {
         "mode": "Incremental",
@@ -117,13 +152,13 @@
       "name": "EnableTDEOnSQLServer",
       "resourceGroup": "[resourceGroup().name]",
       "dependsOn": [
-        "EngineeringLayerSQLServer",
-        "EnableTDEForEngineeringLayerSQLServer"
+        "SQLServerDeployment",
+        "EnableAccessToSQLServerOnKeyVault"
       ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[parameters('EnableTDEOnSQLServer')]",
+          "uri": "[variables('enableTDEonSQLServer')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {

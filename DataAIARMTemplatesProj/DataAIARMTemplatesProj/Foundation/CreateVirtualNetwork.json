@@ -1,0 +1,68 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "VirtualNetworkName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Name of the Virtual Network."
+      }
+    },     
+    "VirtualNetworkAddressPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "The IP Address Range for the Virtual Network."
+      }
+    },
+    "SubnetAddressPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "The IP Address Range for the Base Subnet."
+      }
+    }
+  },
+  "variables": {
+  },
+  "resources": [
+    {
+      "apiVersion": "2017-09-01",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[parameters('VirtualNetworkName')]",
+      "location": "[resourcegroup().location]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('VirtualNetworkAddressPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "base",
+            "properties": {
+              "addressPrefix": "[parameters('SubnetAddressPrefix')]",
+              "serviceEndpoints": [
+                {
+                  "service": "Microsoft.Storage"
+                },
+                {
+                  "service": "Microsoft.Sql"
+                },
+                {
+                  "service": "Microsoft.AzureActiveDirectory"
+                },
+                {
+                  "service": "Microsoft.KeyVault"
+                },
+                {
+                  "service": "Microsoft.Web"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "outputs": {
+  }
+}
