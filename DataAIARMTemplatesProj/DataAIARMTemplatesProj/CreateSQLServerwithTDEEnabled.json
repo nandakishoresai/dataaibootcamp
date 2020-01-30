@@ -67,13 +67,7 @@
       "metadata": {
         "description": "The Url of the Enable TDE on SQL Server Template in Github Repository."
       }
-    },
-    "ADTenantId": {
-      "type": "string",
-      "metadata": {
-        "description": "The TenantId of the Active Directory associated with the SQL Server."
-      }
-    }
+    }  
   },
   "variables": {
   },
@@ -116,7 +110,7 @@
           "SQLServerRGName": { "value": "[resourceGroup().name]" },
           "SQLServerName": { "value": "[parameters('SQLServerName')]" },
           "ADTenantId": { "value": "[parameters('ADTenantId')]" },
-          "AzureKeyVaultName": { "value": "[parameters('KeyVaultName')]" }
+          "KeyVaultName": { "value": "[parameters('KeyVaultName')]" }
         }
       }
     },
@@ -138,9 +132,9 @@
         "parameters": {
           "SQLServerName": { "value": "[parameters('SQLServerName')]" },
           "ADTenantId": { "value": "[parameters('ADTenantId')]" },
-          "AzureKeyVaultName": { "value": "[parameters('KeyVaultName')]" },
-          "AzureKeyVaultKeyName": { "value": "[parameters('HSMKeyName')]" },
-          "AzureKeyVaultKeyId": { "value": "[parameters('HSMKeyId')]" }
+          "KeyVaultName": { "value": "[parameters('KeyVaultName')]" },
+          "HSMKeyName": { "value": "[parameters('HSMKeyName')]" },
+          "HSMKeyId": { "value": "[parameters('HSMKeyId')]" }
         }
       }
     }

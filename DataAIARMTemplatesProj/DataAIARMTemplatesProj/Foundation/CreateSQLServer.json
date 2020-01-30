@@ -25,30 +25,17 @@
       "metadata": {
         "description": "The Password for the SQL Server Admin Login."
       }
-    },
-    "SQLServerLocation": {
-      "type": "string",
-      "metadata": {
-        "description": "The Location for the SQL Server."
-      }
-    },
-    "KeyVaultName": {
-      "type": "string",
-      "metadata": {
-        "description": "The name of the Key Vault Instance."
-      }
-    }
+    }  
   },
   "variables": {
     "vnetId": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourcegroup().name, '/providers/Microsoft.Network/virtualNetworks/', parameters('VirtualNetworkName'))]",
-    "kvId": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourcegroup().name, '/providers/Microsoft.KeyVault/vaults/', parameters('KeyVaultName'))]"
   },
   "resources": [
     {
       "type": "Microsoft.Sql/servers",
       "apiVersion": "2015-05-01-preview",
       "name": "[parameters('SQLServerName')]",
-      "location": "[parameters('SQLServerLocation')]",
+      "location": "[resourceGroup().name]",
       "tags": {},
       "kind": "v12.0",
       "identity": {
@@ -63,7 +50,7 @@
         {
           "type": "databases",
           "apiVersion": "2017-03-01-preview",
-          "location": "[parameters('SQLServerLocation')]",
+          "location": "[resourceGroup().name]",
           "dependsOn": [
             "[resourceId('Microsoft.Sql/servers', parameters('SQLServerName'))]"
           ],

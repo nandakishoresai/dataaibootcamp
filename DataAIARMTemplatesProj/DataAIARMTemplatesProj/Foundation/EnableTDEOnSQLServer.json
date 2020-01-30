@@ -3,8 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "SQLServerName": {
-      "type": "string",
-      "defaultValue": "0003-dv-mkt-tmpsqlsrv",
+      "type": "string",  
       "metadata": {
         "description": "The SQL Server Name to enable the TDE for."
       }
@@ -16,23 +15,20 @@
         "description": "The TenantId of the Active Directory associated with the SQL Server."
       }
     },
-    "AzureKeyVaultName": {
+    "KeyVaultName": {
       "type": "string",
-      "defaultValue": "testkeyvaulthsm01",
       "metadata": {
         "description": "The Name of the Azure Key Vault containing the HSM Key for TDE."
       }
     },
-    "AzureKeyVaultKeyName": {
+    "HSMKeyName": {
       "type": "string",
-      "defaultValue": "tsthsmKey",
       "metadata": {
         "description": "The Name of the HSM Key in the Azure Key Vault used for TDE."
       }
     },
-    "AzureKeyVaultKeyId": {
-      "type": "string",
-      "defaultValue": "ee1c47c016474b1cbed5bbf06765e4b3",
+    "HSMKeyId": {
+      "type": "string",      
       "metadata": {
         "description": "The Object Id of the HSM Key in the Azure Key Vault used for TDE."
       }
@@ -53,8 +49,8 @@
     }
   },
   "variables": {
-    "azurekeyvaultkeyIdConcat": "[concat(parameters('AzureKeyVaultName'),'_', parameters('AzureKeyVaultKeyName'), '_',  parameters('AzureKeyVaultKeyId'))]",
-    "azurekeyvaultkeyUri": "[concat('https://', parameters('AzureKeyVaultName'), '.vault.azure.net/keys/', parameters('AzureKeyVaultKeyName'), '/', parameters('AzureKeyVaultKeyId'))]"
+    "azurekeyvaultkeyIdConcat": "[concat(parameters('KeyVaultName'),'_', parameters('HSMKeyName'), '_',  parameters('HSMKeyId'))]",
+    "azurekeyvaultkeyUri": "[concat('https://', parameters('KeyVaultName'), '.vault.azure.net/keys/', parameters('HSMKeyName'), '/', parameters('HSMKeyId'))]"
   },
   "resources": [
     {
