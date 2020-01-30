@@ -35,7 +35,7 @@
       "type": "Microsoft.Sql/servers",
       "apiVersion": "2015-05-01-preview",
       "name": "[parameters('SQLServerName')]",
-      "location": "[resourceGroup().name]",
+      "location": "[resourceGroup().location]",
       "tags": {},
       "kind": "v12.0",
       "identity": {

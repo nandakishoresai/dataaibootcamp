@@ -123,7 +123,7 @@
           "EnableTDEonSQLServerURI": { "value": "[variables('enableTDEonSQLServer')]" }
         }
       }
-    }
+    }  
   ],
   "outputs": {}
 }
