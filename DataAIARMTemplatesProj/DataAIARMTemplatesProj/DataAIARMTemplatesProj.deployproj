@@ -31,6 +31,7 @@
     </None>
     <Content Include="Deploy-AzureResourceGroup.ps1" />
     <None Include="Foundation\CreateAccesstoSQLOnKeyVault.json" />
+    <None Include="Foundation\CreateAnalysisService.json" />
     <None Include="Foundation\CreateAzureDataFactory.json" />
     <None Include="Foundation\CreateKeyVault.json" />
     <None Include="Foundation\CreateSQLDB.json" />

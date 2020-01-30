@@ -7,11 +7,17 @@
       "metadata": {
         "description": "The Name of the Virtual Network."
       }
-    },     
+    },
     "VirtualNetworkAddressPrefix": {
       "type": "string",
       "metadata": {
         "description": "The IP Address Range for the Virtual Network."
+      }
+    },
+    "SubnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Name of the Subnet in the Virtual Network."
       }
     },
     "SubnetAddressPrefix": {

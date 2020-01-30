@@ -14,6 +14,12 @@
         "description": "The Name of the Virtual Network."
       }
     },
+    "SubnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Name of the Subnet in the Virtual Network."
+      }
+    },
     "SQLServerAdminLoginName": {
       "type": "string",
       "metadata": {
@@ -25,7 +31,7 @@
       "metadata": {
         "description": "The Password for the SQL Server Admin Login."
       }
-    }  
+    }
   },
   "variables": {
     "vnetId": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourcegroup().name, '/providers/Microsoft.Network/virtualNetworks/', parameters('VirtualNetworkName'))]",
@@ -67,7 +73,7 @@
         "[resourceId('Microsoft.Sql/servers', parameters('SQLServerName'))]"
       ],
       "properties": {
-        "virtualNetworkSubnetId": "[concat(variables('vnetId'), '/subnets/base')]",
+        "virtualNetworkSubnetId": "[concat(variables('vnetId'), '/subnets/', parameters('SubnetName'))]",
         "ignoreMissingVnetServiceEndpoint": false
       }
     }

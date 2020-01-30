@@ -14,6 +14,12 @@
         "description": "The IP Address Range for the Virtual Network."
       }
     },
+    "SubnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Name of the Subnet in the Virtual Network."
+      }
+    },
     "SubnetAddressPrefix": {
       "type": "string",
       "metadata": {
@@ -37,31 +43,25 @@
       "metadata": {
         "description": "The Password for the SQL Server Admin Login."
       }
-    },      
-    "KeyVaultName": {
+    },
+    "DataFactoryName": {
       "type": "string",
       "metadata": {
-        "description": "The name of the Key Vault Instance."
+        "description": "The Name of the Azure DataFactory."
       }
     },
-    "HSMKeyName": {
+    "SSASServerName": {
       "type": "string",
       "metadata": {
-        "description": "The Name of the HSM Key Vault Key storing the HSM Key to be associated with the SQL Server."
+        "description": "The Name of the Azure Analysis Services."
       }
     },
-    "HSMKeyId": {
+    "ADAdminLogin": {
       "type": "string",
       "metadata": {
-        "description": "The Id  HSM Key Vault Key storing the HSM Key to be associated with the SQL Server."
+        "description": "The Active Directory Admin Login Name for the Azure Analysis Service."
       }
     },
-    "ADTenantId": {
-      "type": "string",
-      "metadata": {
-        "description": "The TenantId of the Active Directory associated with the SQL Server."
-      }
-    },  
     "GithubURI": {
       "type": "string",
       "metadata": {
@@ -71,10 +71,9 @@
   },
   "variables": {
     "createvirtualnetworkURI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateVirtualNetwork.json')]",
-    "createSQLServerwithTDEEnabledURI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/CreateSQLServerwithTDEEnabled.json')]",
     "createSQLServerURI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateSQLServer.json')]",
-    "createaccesstoSQLonKeyVault": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateAccesstoSQLOnKeyVault.json')]",
-    "enableTDEonSQLServer": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/EnableTDEOnSQLServer.json')]"
+    "createAzureDataFactoryURI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateSQLServer.json')]",
+    "createSSASURI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateAnalysisService.json')]"
   },
   "resources": [
     {
@@ -91,6 +90,7 @@
         "parameters": {
           "VirtualNetworkName": { "value": "[parameters('VirtualNetworkName')]" },
           "VirtualNetworkAddressPrefix": { "value": "[parameters('VirtualNetworkAddressPrefix')]" },
+          "SubnetName": { "value": "[parameters('SubnetName')]" },
           "SubnetAddressPrefix": { "value": "[parameters('SubnetAddressPrefix')]" }
         }
       }
@@ -98,7 +98,7 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
-      "name": "SQLServerWithTDEEnabledDeployment",
+      "name": "SQLServerDeployment",
       "resourceGroup": "[resourceGroup().name]",
       "dependsOn": [
         "VirtualNetworkDeployment"
@@ -106,24 +106,52 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('createSQLServerwithTDEEnabledURI')]",
+          "uri": "[variables('createSQLServerURI')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
           "SQLServerName": { "value": "[parameters('SQLServerName')]" },
-          "SQLServerAdminLoginName": { "value": "[parameters('SQLServerAdminLoginName')]" },
-          "SQLServerAdminLoginPassword": { "value": "[parameters('SQLServerAdminLoginPassword')]" },
           "VirtualNetworkName": { "value": "[parameters('VirtualNetworkName')]" },
-          "KeyVaultName": { "value": "[parameters('KeyVaultName')]" },
-          "HSMKeyName": { "value": "[parameters('HSMKeyName')]" },
-          "HSMKeyId": { "value": "[parameters('HSMKeyId')]" },
-          "ADTenantId": { "value": "[parameters('ADTenantId')]" },
-          "CreateSQLServerURI": { "value": "[variables('createSQLServerURI')]" },
-          "CreateAccesstoSQLonKeyVaultURI": { "value": "[variables('createaccesstoSQLonKeyVault')]" },
-          "EnableTDEonSQLServerURI": { "value": "[variables('enableTDEonSQLServer')]" }
-        }  
+          "SubnetName": { "value": "[parameters('SubnetName')]" },
+          "SQLServerAdminLoginName": { "value": "[parameters('SQLServerAdminLoginName')]" },
+          "SQLServerAdminLoginPassword": { "value": "[parameters('SQLServerAdminLoginPassword')]" }
+        }
       }
-    }  
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2017-05-10",
+      "name": "AzureDataFactoryDeployment",
+      "resourceGroup": "[resourceGroup().name]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('createAzureDataFactoryURI')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "DataFactoryName": { "value": "[parameters('DataFactoryName')]" }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2017-05-10",
+      "name": "AzureAnalysisServiceDeployment",
+      "resourceGroup": "[resourceGroup().name]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('createSSASURI')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "SSASServerName": { "value": "[parameters('SSASServerName')]" },
+          "ADAdminLogin": { "value": "[parameters('ADAdminLogin')]" }
+        }
+      }
+    }
+
   ],
   "outputs": {}
 }
