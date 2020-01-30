@@ -72,7 +72,7 @@
   "variables": {
     "createvirtualnetworkURI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateVirtualNetwork.json')]",
     "createSQLServerURI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateSQLServer.json')]",
-    "createAzureDataFactoryURI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateSQLServer.json')]",
+    "createAzureDataFactoryURI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateAzureDataFactory.json')]",
     "createSSASURI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateAnalysisService.json')]"
   },
   "resources": [

@@ -31,6 +31,18 @@
     },
     "GithubURI": {
       "value": "https://raw.githubusercontent.com/nandakishoresai/dataaibootcamp/master"
+    },
+    "SubnetName": {
+      "value": "base"
+    },
+    "DataFactoryName": {
+      "value": "demoadf"
+    },
+    "SSASServerName": {
+      "value": "demossas"
+    },
+    "ADAdminLogin": {
+      "value": "nandakishore.sai@avanade.com"
     }
   }
 }
