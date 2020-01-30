@@ -50,7 +50,7 @@
         {
           "type": "databases",
           "apiVersion": "2017-03-01-preview",
-          "location": "[resourceGroup().name]",
+          "location": "[resourceGroup().location]",
           "dependsOn": [
             "[resourceId('Microsoft.Sql/servers', parameters('SQLServerName'))]"
           ],
