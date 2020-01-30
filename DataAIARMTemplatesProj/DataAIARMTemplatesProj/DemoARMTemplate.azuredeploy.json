@@ -89,8 +89,7 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "VirtualNetworkName": { "value": "transpire" },
-          "VirtualNetworkLocation": { "value": "[resourcegroup().location]" },
+          "VirtualNetworkName": { "value": "[parameters('VirtualNetworkName')]" },
           "VirtualNetworkAddressPrefix": { "value": "[parameters('VirtualNetworkAddressPrefix')]" },
           "SubnetAddressPrefix": { "value": "[parameters('SubnetAddressPrefix')]" }
         }
@@ -115,13 +114,13 @@
           "SQLServerAdminLoginName": { "value": "[parameters('SQLServerAdminLoginName')]" },
           "SQLServerAdminLoginPassword": { "value": "[parameters('SQLServerAdminLoginPassword')]" },
           "VirtualNetworkName": { "value": "[parameters('VirtualNetworkName')]" },
-          "VaultName": { "value": "[parameters('KeyVaultName')]" },
+          "KeyVaultName": { "value": "[parameters('KeyVaultName')]" },
           "HSMKeyName": { "value": "[parameters('HSMKeyName')]" },
           "HSMKeyId": { "value": "[parameters('HSMKeyId')]" },
           "ADTenantId": { "value": "[parameters('ADTenantId')]" },
           "CreateSQLServerURI": { "value": "[variables('createSQLServerURI')]" },
           "CreateAccesstoSQLonKeyVaultURI": { "value": "[variables('createaccesstoSQLonKeyVault')]" },
-          "EnableTDEonSQLServerURI": { "value": "[variables('enableTDEonSQLServer')]" }  
+          "EnableTDEonSQLServerURI": { "value": "[variables('enableTDEonSQLServer')]" }
         }
       }
     }
