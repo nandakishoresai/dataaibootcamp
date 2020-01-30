@@ -1,0 +1,14 @@
+https://github.com/nandakishoresai/dataaibootcamp/tree/master/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation  
+
+
+VirtualNetworkName: 003-d-hq-vnet
+VirtualNetworkAddressPrefix: 10.55.0.0/18
+SubnetAddressPrefix: 10.55.2.0/24
+SQLServerName: 003-d-hq-sqlsrv
+SQLServerAdminLoginName: sauser
+SQLServerAdminLoginPassword: Kewl_nan45&/
+KeyVaultName: demohsmkv  
+HSMKeyName: demohsmkey
+HSMKeyId: 
+ADTenantId: cf36141c-ddd7-45a7-b073-111f66d0b30c  
+GithubURI:  https://github.com/nandakishoresai/dataaibootcamp/tree/master
