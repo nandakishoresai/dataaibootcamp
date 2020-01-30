@@ -2,5 +2,35 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "VirtualNetworkName": {
+      "value": "0003-d-hq-vnet"
+    },
+    "VirtualNetworkAddressPrefix": {
+      "value": "10.55.0.0/18"
+    },
+    "SubnetAddressPrefix": {
+      "value": "10.55.2.0/24"
+    },
+    "SQLServerName": {
+      "value": "0003-d-hq-sqlsrv"
+    },
+    "SQLServerAdminLoginName": {
+      "value": "sauser"
+    },
+    "KeyVaultName": {
+      "value": "demohsmkv"
+    },
+    "HSMKeyName": {
+      "value": "demohsmkey"
+    },
+    "HSMKeyId": {
+      "value": "abfd1df2281747898815469369d425b3"
+    },
+    "ADTenantId": {
+      "value": "cf36141c-ddd7-45a7-b073-111f66d0b30c"
+    },
+    "GithubURI": {
+      "value": "https://github.com/nandakishoresai/dataaibootcamp"
+    }
   }
 }
