@@ -1,0 +1,63 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "StorageAccountName": {
+      "type": "string"
+    },
+    "AccountType": {
+      "type": "string",
+      "metadata": {
+        "description": "The Account Type for the ADLS Gen2 Storage Account."
+      }
+    },
+    "VirtualNetworkName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Name of the Virtual Network."
+      }
+    },
+    "SubnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Name of the Subnet in the Virtual Network."
+      }
+    }
+  },
+  "variables": {
+    "vnetId": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourcegroup().name, '/providers/Microsoft.Network/virtualNetworks/', parameters('VirtualNetworkName'))]"
+  },
+  "resources": [
+    {
+      "name": "[parameters('StorageAccountName')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2019-06-01",
+      "location": "[resourcegroup().location]",
+      "properties": {
+        "accessTier": "Cool",
+        "supportsHttpsTrafficOnly": true,
+        "isHnsEnabled": true,
+        "largeFileSharesState": "Disabled",
+        "networkAcls": {
+          "bypass": "AzureServices",
+          "virtualNetworkRules": [
+            {
+              "id": "[concat(variables('vnetId'), '/subnets/', parameters('SubnetName'))]",  
+              "action": "Allow"
+            }
+          ],
+          "ipRules": [],
+          "defaultAction": "Deny"
+        }
+      },
+      "dependsOn": [],
+      "sku": {
+        "name": "[parameters('AccountType')]"
+      },
+      "kind": "StorageV2",
+      "tags": {}
+    }
+  ],
+  "outputs": {
+  }
+}
