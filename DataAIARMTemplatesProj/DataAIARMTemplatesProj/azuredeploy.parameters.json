@@ -24,13 +24,19 @@
       "value": "base"
     },
     "DataFactoryName": {
-      "value": "demoadf"
+      "value": "demonsadf02"
     },
-    "SSASServerName": {
+    "SSASServerName": { 
       "value": "demossas"
     },
     "ADAdminLogin": {
       "value": "nandakishore.sai@avanade.com"
+    },
+    "StorageAccountName": {
+      "value": "demoadlsstg01"
+    },
+    "AccountType": {
+      "value": "Standard_LRS"
     }
   }
 }

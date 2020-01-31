@@ -62,6 +62,15 @@
         "description": "The Active Directory Admin Login Name for the Azure Analysis Service."
       }
     },
+    "StorageAccountName": {
+      "type": "string"
+    },
+    "AccountType": {
+      "type": "string",
+      "metadata": {
+        "description": "The Account Type for the ADLS Gen2 Storage Account."
+      }
+    },
     "GithubURI": {
       "type": "string",
       "metadata": {
@@ -73,14 +82,15 @@
     "createvirtualnetworkURI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateVirtualNetwork.json')]",
     "createSQLServerURI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateSQLServer.json')]",
     "createAzureDataFactoryURI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateAzureDataFactory.json')]",
-    "createSSASURI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateAnalysisService.json')]"
+    "createSSASURI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateAnalysisService.json')]",
+    "createADLSGen2URI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateADLSGen2Storage.json')]"
   },
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "name": "VirtualNetworkDeployment",
-      "resourceGroup": "[resourceGroup().name]",     
+      "resourceGroup": "[resourceGroup().name]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -150,8 +160,29 @@
           "ADAdminLogin": { "value": "[parameters('ADAdminLogin')]" }
         }
       }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2017-05-10",
+      "name": "ADLSGen2Deployment",
+      "resourceGroup": "[resourceGroup().name]",
+      "dependsOn": [
+        "VirtualNetworkDeployment"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('createADLSGen2URI')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "StorageAccountName": { "value": "[parameters('StorageAccountName')]" },
+          "AccountType": { "value": "[parameters('AccountType')]" },
+          "VirtualNetworkName": { "value": "[parameters('VirtualNetworkName')]" },
+          "SubnetName": { "value": "[parameters('SubnetName')]" }  
+        }
+     }
     }
-
   ],
   "outputs": {}
 }
