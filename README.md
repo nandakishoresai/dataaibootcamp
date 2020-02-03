@@ -6,4 +6,9 @@ Set-AzContext -SubscriptionId <SubscriptionId>
 
 To deploy the Infrastructure run the below command:
 
-New-AzResourceGroupDeployment -ResourceGroupName "<RGName>" -TemplateUri https://raw.githubusercontent.com/nandakishoresai/dataaibootcamp/master/DataAIARMTemplatesProj/DataAIARMTemplatesProj/DemoARMTemplate.azuredeploy.json -Verbose
+New-AzResourceGroupDeployment -ResourceGroupName "<RGName>" -TemplateUri https://raw.githubusercontent.com/nandakishoresai/dataaibootcamp/master/DataAIARMTemplatesProj/DataAIARMTemplatesProj/DemoARMTemplate.azuredeploy.json -Verbose  
+
+To deploy the Azure Analysis Service
+
+New-AzResourceGroupDeployment -ResourceGroupName "<RGName>" -TemplateUri https://raw.githubusercontent.com/nandakishoresai/dataaibootcamp/master/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateAnalysisService.json -Verbose
+
