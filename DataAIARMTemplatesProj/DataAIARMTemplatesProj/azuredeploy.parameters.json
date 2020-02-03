@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "VirtualNetworkName": {
-      "value": "0003-d-hq-vnet"
+      "value": "demodaainsvnet"
     },
     "VirtualNetworkAddressPrefix": {
       "value": "10.55.0.0/18"
@@ -12,14 +12,11 @@
       "value": "10.55.2.0/24"
     },
     "SQLServerName": {
-      "value": "0003-d-hq-sqlsrv"
+      "value": "demodaaisqlsrv"
     },
     "SQLServerAdminLoginName": {
       "value": "sauser"
-    },    
-    "GithubURI": {
-      "value": "https://raw.githubusercontent.com/nandakishoresai/dataaibootcamp/master"
-    },
+    },  
     "SubnetName": {
       "value": "base"
     },
@@ -34,9 +31,6 @@
     },
     "StorageAccountName": {
       "value": "demoadlsstg01"
-    },
-    "AccountType": {
-      "value": "Standard_LRS"
-    }
+    }  
   }
 }

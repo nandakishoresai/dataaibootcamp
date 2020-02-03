@@ -64,26 +64,15 @@
     },
     "StorageAccountName": {
       "type": "string"
-    },
-    "AccountType": {
-      "type": "string",
-      "metadata": {
-        "description": "The Account Type for the ADLS Gen2 Storage Account."
-      }
-    },
-    "GithubURI": {
-      "type": "string",
-      "metadata": {
-        "description": "The Url of the Github Repository."
-      }
-    }
+    }  
   },
   "variables": {
-    "createvirtualnetworkURI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateVirtualNetwork.json')]",
-    "createSQLServerURI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateSQLServer.json')]",
-    "createAzureDataFactoryURI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateAzureDataFactory.json')]",
-    "createSSASURI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateAnalysisService.json')]",
-    "createADLSGen2URI": "[concat(parameters('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateADLSGen2Storage.json')]"
+    "githuburi": "https://raw.githubusercontent.com/nandakishoresai/dataaibootcamp/master",
+    "createvirtualnetworkURI": "[concat(variables('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateVirtualNetwork.json')]",
+    "createSQLServerURI": "[concat(variables('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateSQLServer.json')]",
+    "createAzureDataFactoryURI": "[concat(variables('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateAzureDataFactory.json')]",
+    "createSSASURI": "[concat(variables('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateAnalysisService.json')]",
+    "createADLSGen2URI": "[concat(variables('GithubURI'), '/DataAIARMTemplatesProj/DataAIARMTemplatesProj/Foundation/CreateADLSGen2Storage.json')]"
   },
   "resources": [
     {
@@ -177,9 +166,9 @@
         },
         "parameters": {
           "StorageAccountName": { "value": "[parameters('StorageAccountName')]" },
-          "AccountType": { "value": "[parameters('AccountType')]" },
+          "AccountType": { "value": "Standard_LRS" },
           "VirtualNetworkName": { "value": "[parameters('VirtualNetworkName')]" },
-          "SubnetName": { "value": "[parameters('SubnetName')]" }  
+          "SubnetName": { "value": "[parameters('SubnetName')]" }
         }
      }
     }
